@@ -1,12 +1,31 @@
-package com.tutorial.model;
+package com.tutorial.mvc;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Alien {
 	
+	@Id
+	@Column(name="a_id")
 	private int aId;
+	@Column(name = "a_name")
 	private String aName;
 	
 	
+	public Alien() {
+		
+	}
 	
+	
+	public Alien(int aId, String aName) {
+		super();
+		this.aId = aId;
+		this.aName = aName;
+	}
+
+
 	public int getaId() {
 		return aId;
 	}
