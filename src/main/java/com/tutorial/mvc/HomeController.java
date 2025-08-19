@@ -1,35 +1,50 @@
 package com.tutorial.mvc;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.servlet.http.HttpSession;
-import jakarta.websocket.server.PathParam;
-
-@Controller
+@RestController 
 public class HomeController {
 	
 	@Autowired
 	private AlienRepo aRepo;
 	
-//	public HomeController(AlienRepo aRepo) {
-//		this.aRepo= aRepo;
-//	}
-
 	@RequestMapping("/")
 	public String home() {
 		System.out.println("home method of controller");
 		return "index";
 	}
+	
+	@PostMapping("alien")
+	public Alien saveAlien(@RequestBody Alien alien) {
+	
+		return aRepo.save(alien);
+		
+	}
+	
+	@GetMapping("/aliens")
+	//@ResponseBody
+	public List<Alien> getAliens() {
+		return aRepo.findAll();
+	}
+	
+	
+	//@ResponseBody
+	@GetMapping("/alien/{aid}")
+	public Alien getAlien(@PathVariable("aid") int aId) {
+		return aRepo.findById(aId).orElse(null);
+	}
+	
+	
+	
+	
 //	@RequestMapping("/add")
 //	public ModelAndView add(@RequestParam("num1") int i, @RequestParam("num2") int j) {
 //		
@@ -66,33 +81,34 @@ public class HomeController {
 //		return "output";
 //	}
 //	
-	@GetMapping(path="/aliens")
-	public String getAliens(Model m) {
-		m.addAttribute("aliens", aRepo.findAll());
-		return "output";
-	}
+//	@GetMapping(path="/aliens")
+//	public String getAliens(Model m) {
+//		m.addAttribute("aliens", aRepo.findAll());
+//		return "output";
+//	}
+//	
+//	@GetMapping(path="/alien/name")
+//	public String getAliens(@RequestParam("aName")  String aName, Model m) {
+//		
+//		m.addAttribute("aliens", aRepo.khojo(aName));
+//		//m.addAttribute("aliens", aRepo.findByaName(aName));
+//		
+//		return "output";
+//	}
+//	
+//	@GetMapping(path="/alien/id")
+//	public String getAliens(@RequestParam("aId") int aId, Model m) {
+//		
+//		m.addAttribute("aliens", aRepo.findById(aId));
+//			
+//		return "output";
+//	}
+//	
+//	@PostMapping(path="/alien")
+//	public String saveAlien(@ModelAttribute Alien alien, Model m) {
+//		
+//		m.addAttribute("aliens", aRepo.save(alien));
+//		return "output";
+//	}
 	
-	@GetMapping(path="/alien/name")
-	public String getAliens(@RequestParam("aName")  String aName, Model m) {
-		
-		m.addAttribute("aliens", aRepo.khojo(aName));
-		//m.addAttribute("aliens", aRepo.findByaName(aName));
-		
-		return "output";
-	}
-	
-	@GetMapping(path="/alien/id")
-	public String getAliens(@RequestParam("aId") int aId, Model m) {
-		
-		m.addAttribute("aliens", aRepo.findById(aId));
-			
-		return "output";
-	}
-	
-	@PostMapping(path="/alien")
-	public String saveAlien(@ModelAttribute Alien alien, Model m) {
-		
-		m.addAttribute("aliens", aRepo.save(alien));
-		return "output";
-	}
 }
